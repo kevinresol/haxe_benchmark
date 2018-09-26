@@ -1,0 +1,31 @@
+sudo: required
+dist: trusty
+
+language: node_js
+node_js: 8
+
+os:
+  - linux
+  # - osx
+
+env:
+  - HAXE_VERSION=3.3.0-rc.1
+  - HAXE_VERSION=3.4.7
+  - HAXE_VERSION=latest
+  
+install:
+  - npm i -g lix
+  - lix install haxe $HAXE_VERSION
+  - lix download
+  
+script:
+  - lix run travix interp
+  - lix run travix neko
+  - lix run travix python
+  - lix run travix node
+  - lix run travix flash
+  - lix run travix java
+  - lix run travix cs
+  - lix run travix cpp
+  - lix run travix php
+  - if [ "$HAXE_VERSION" == "latest" ]; then lix run travix hl; fi
