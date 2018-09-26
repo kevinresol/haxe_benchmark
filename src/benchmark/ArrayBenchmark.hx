@@ -39,7 +39,7 @@ class ArrayBenchmark {
 	@:variant(this)
 	public function getFirst<T>(v:T):Assertions {
 		var array = [for(_ in 0...1000000) v];
-		return benchmark(100, array[0]);
+		return benchmark(1000000, array[0]);
 	}
 	
 	@:generic
