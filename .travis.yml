@@ -9,7 +9,6 @@ os:
   # - osx
 
 env:
-  - HAXE_VERSION=3.3.0-rc.1
   - HAXE_VERSION=3.4.7
   - HAXE_VERSION=latest
   
