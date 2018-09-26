@@ -1,6 +1,4 @@
-# Haxe Benchmark
-
-[![Build Status](https://travis-ci.org/kevinresol/haxe_benchmark.svg?branch=master)](https://travis-ci.org/kevinresol/haxe_benchmark)
+# Haxe Benchmark [![Build Status](https://travis-ci.org/kevinresol/haxe_benchmark.svg?branch=master)](https://travis-ci.org/kevinresol/haxe_benchmark)
 
 ## Results
 
