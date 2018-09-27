@@ -186,6 +186,7 @@ class Charts extends coconut.ui.View {
 			for(title in operations.keys()) {
 				var data = targets.map(target -> switch operations[title].find(op -> op.target == target) {
 					case null: null;
+					case v if(v.value > js.Syntax.code('Number.MAX_SAFE_INTEGER')): js.Syntax.code('Number.MAX_SAFE_INTEGER');
 					case v: v.value;
 				});
 				

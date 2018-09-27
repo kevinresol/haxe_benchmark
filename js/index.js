@@ -1070,13 +1070,18 @@ Charts.prototype = $extend(coconut_ui_View.prototype,{
 							return null;
 						} else {
 							var v5 = _g4;
-							return v5.value;
+							if(v5.value > Number.MAX_SAFE_INTEGER) {
+								return Number.MAX_SAFE_INTEGER;
+							} else {
+								var v6 = _g4;
+								return v6.value;
+							}
 						}
 					};
 				})(title2,operations1));
 				var copy = data.filter((function() {
-					return function(v6) {
-						return v6 != null;
+					return function(v7) {
+						return v7 != null;
 					};
 				})());
 				copy.sort(Reflect.compare);
