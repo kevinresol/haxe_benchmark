@@ -195,7 +195,7 @@ class Charts extends coconut.ui.View {
 									max: {
 										var copy = data.filter(v -> v != null);
 										copy.sort(Reflect.compare);
-										copy[copy.length - 2] * 1.5;
+										copy[copy.length - 2] * 1.5; // use the second-highest value plus a margin
 									},
 									callback: (value, inidex, values) -> Format.number(value),
 								}
