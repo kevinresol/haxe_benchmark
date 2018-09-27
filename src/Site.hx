@@ -101,22 +101,33 @@ class Site extends coconut.ui.View {
 	override function afterInit(e) {
 		remote.repos().ofSlug('kevinresol/haxe_benchmark').builds().list()
 			.next(function(res) {
-				for(build in res.builds) {
-					if(build.state == 'passed') {
-						message = build.commit.message;
-						sha = build.commit.sha;
-						var job = build.jobs.pop();
-						return remote.jobs().ofId(jobId = job.id).log();
+				var iter = res.builds.iterator();
+				
+				return Future.async(function(cb) {
+					function next() {
+						if(iter.hasNext()) {
+							var build = iter.next();
+							if(build.state == 'passed') {
+								message = build.commit.message;
+								sha = build.commit.sha;
+								var job = build.jobs.pop();
+								remote.jobs().ofId(jobId = job.id).log().next(res -> LogParser.parse(res.content))
+									.handle(function(o) switch o {
+										case Success(null): trace('parsed nothing'); next();
+										case Success(parsed): cb(Success(parsed));
+										case Failure(e): trace(e); next();
+									});
+							}
+						} else {
+							cb(Failure(new Error('No valid builds')));
+						}
 					}
-				}
-				return new Error('No builds');
+					next();
+				});
 			})
 			.handle(function(o) switch o {
-				case Success(res): 
-					// log = res.content;
-					results = LogParser.parse(res.content);
-				case Failure(e):
-					trace(e);
+				case Success(parsed): results = parsed;
+				case Failure(e): trace(e);
 			});
 	}
 }

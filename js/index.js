@@ -190,7 +190,6 @@ ChartView.prototype = $extend(coconut_ui_View.prototype,{
 		this.chart = new Chart(e.querySelector("canvas"),tink_state__$Observable_Observable_$Impl_$.get_value(this.__slots.config.observe()));
 	}
 	,afterPatching: function(e) {
-		console.log("src/Chart.hx:26:","patch");
 		var _g = 0;
 		var _g1 = Reflect.fields(tink_state__$Observable_Observable_$Impl_$.get_value(this.__slots.config.observe()));
 		while(_g < _g1.length) {
@@ -201,7 +200,6 @@ ChartView.prototype = $extend(coconut_ui_View.prototype,{
 		this.chart.update({ duration : 0});
 	}
 	,afterDestroy: function(e) {
-		console.log("src/Chart.hx:34:","destroy");
 		if(e.parentNode != null) {
 			e.parentNode.removeChild(e);
 		}
@@ -732,34 +730,58 @@ Site.prototype = $extend(coconut_ui_View.prototype,{
 	,afterInit: function(e) {
 		var _gthis = this;
 		tink_core__$Promise_Promise_$Impl_$.next(this.remote.repos().ofSlug("kevinresol/haxe_benchmark").builds().list(),function(res) {
-			var _g = 0;
-			var _g1 = res.builds;
-			while(_g < _g1.length) {
-				var build = _g1[_g];
-				++_g;
-				if(build.state == "passed") {
-					var param = build.commit.message;
-					_gthis.__coco_message.set(param);
-					var param1 = build.commit.sha;
-					_gthis.__coco_sha.set(param1);
-					var job = build.jobs.pop();
-					var this1 = _gthis.remote.jobs();
-					var param2 = job.id;
-					_gthis.__coco_jobId.set(param2);
-					return this1.ofId(param2).log();
-				}
-			}
-			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(null,"No builds",{ fileName : "src/Site.hx", lineNumber : 112, className : "Site", methodName : "afterInit"}))));
-		}).handle(function(o) {
-			switch(o._hx_index) {
+			var iter = HxOverrides.iter(res.builds);
+			return tink_core__$Future_Future_$Impl_$.async(function(cb) {
+				var next = null;
+				next = function() {
+					if(iter.hasNext()) {
+						var build = iter.next();
+						if(build.state == "passed") {
+							var param = build.commit.message;
+							_gthis.__coco_message.set(param);
+							var param1 = build.commit.sha;
+							_gthis.__coco_sha.set(param1);
+							var job = build.jobs.pop();
+							var this1 = _gthis.remote.jobs();
+							var param2 = job.id;
+							_gthis.__coco_jobId.set(param2);
+							tink_core__$Promise_Promise_$Impl_$.next(this1.ofId(param2).log(),function(res1) {
+								return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Success(LogParser.parse(res1.content))));
+							}).handle(function(o) {
+								switch(o._hx_index) {
+								case 0:
+									if(o.data == null) {
+										console.log("src/Site.hx:116:","parsed nothing");
+										next();
+									} else {
+										var parsed = o.data;
+										cb(tink_core_Outcome.Success(parsed));
+									}
+									break;
+								case 1:
+									var e1 = o.failure;
+									console.log("src/Site.hx:118:",e1);
+									next();
+									break;
+								}
+							});
+						}
+					} else {
+						var next1 = tink_core_Outcome.Failure(new tink_core_TypedError(null,"No valid builds",{ fileName : "src/Site.hx", lineNumber : 122, className : "Site", methodName : "afterInit"}));
+						cb(next1);
+					}
+				};
+				next();
+			});
+		}).handle(function(o1) {
+			switch(o1._hx_index) {
 			case 0:
-				var res1 = o.data;
-				var param3 = LogParser.parse(res1.content);
-				_gthis.__coco_results.set(param3);
+				var parsed1 = o1.data;
+				_gthis.__coco_results.set(parsed1);
 				break;
 			case 1:
-				var e1 = o.failure;
-				console.log("src/Site.hx:119:",e1);
+				var e2 = o1.failure;
+				console.log("src/Site.hx:130:",e2);
 				break;
 			}
 		});
