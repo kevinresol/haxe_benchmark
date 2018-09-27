@@ -2,6 +2,9 @@ package ;
 
 import js.jquery.Helper.*;
 
+using tink.CoreApi;
+
+@:native('ChartView')
 class Chart extends coconut.ui.View {
 	@:attr var config:{};
 	@:attr var width:String = null;
@@ -11,7 +14,7 @@ class Chart extends coconut.ui.View {
 	
 	function render() '
 		<div data-hack=${{config; '';}}>
-			<canvas width=${width} height=${height} key=${this}/>
+			<canvas width=${width} height=${height}/>
 		</div>
 	';
 	
@@ -20,14 +23,15 @@ class Chart extends coconut.ui.View {
 	}
 	
 	override function afterPatching(e) {
+		trace('patch');
 		for(field in Reflect.fields(config)) 
 			Reflect.setField(chart, field, Reflect.field(config, field));
-		chart.update({
-			duration: 0,
-		});
+		
+		chart.update({duration: 0});
 	}
 	
 	override function afterDestroy(e) {
+		trace('destroy');
 		J(e).remove();
 	}
 }
