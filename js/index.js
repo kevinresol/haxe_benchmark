@@ -431,12 +431,30 @@ LogParser.parse = function(log) {
 	var started = false;
 	var current = [];
 	var section = null;
+	var haxeVer = null;
 	var i = 0;
 	var _g1 = 0;
 	var _g = lines.length;
 	while(_g1 < _g) {
 		var i1 = _g1++;
 		var line = lines[i1];
+		if(haxeVer == null && StringTools.startsWith(line,"$ export HAXE_VERSION=")) {
+			var ver = HxOverrides.substr(line,"$ export HAXE_VERSION=".length,null);
+			console.log("src/LogParser.hx:32:",ver);
+			if(ver == "latest") {
+				haxeVer = Version.Latest;
+			} else {
+				var _g2 = ver.split(".");
+				if(_g2.length == 3) {
+					var patch = _g2[2];
+					var minor = _g2[1];
+					var major = _g2[0];
+					haxeVer = Version.SemVer(Std.parseInt(major),Std.parseInt(minor),Std.parseInt(patch));
+				} else {
+					haxeVer = Version.Unknown(ver);
+				}
+			}
+		}
 		if(line == ">> Haxe Benchmark Log End <<") {
 			started = false;
 			var v = tink_pure__$List_List_$Impl_$.fromArray(current);
@@ -464,6 +482,22 @@ LogParser.parse = function(log) {
 		}
 		if(StringTools.startsWith(line,"travis_fold:start:build-")) {
 			target = line.substring("travis_fold:start:build-".length,line.indexOf("."));
+			switch(haxeVer._hx_index) {
+			case 0:
+				var major1 = haxeVer.major;
+				if(major1 >= 4) {
+					if(target == "interp") {
+						target = "eval";
+					}
+				}
+				break;
+			case 2:
+				break;
+			default:
+				if(target == "interp") {
+					target = "eval";
+				}
+			}
 		}
 		if(line == ">> Haxe Benchmark Log Start <<") {
 			started = true;
@@ -472,7 +506,7 @@ LogParser.parse = function(log) {
 	var ret = tink_pure__$List_List_$Impl_$._new();
 	if(new haxe_ds__$StringMap_StringMapIterator(targets,targets.arrayKeys()).hasNext()) {
 		var a = [targets];
-		var _g2 = new haxe_ds_StringMap();
+		var _g3 = new haxe_ds_StringMap();
 		var _g11 = 0;
 		while(_g11 < a.length) {
 			var m = a[_g11];
@@ -482,16 +516,21 @@ LogParser.parse = function(log) {
 				var k1 = k.next();
 				var value = __map_reserved[k1] != null ? m.getReserved(k1) : m.h[k1];
 				if(__map_reserved[k1] != null) {
-					_g2.setReserved(k1,value);
+					_g3.setReserved(k1,value);
 				} else {
-					_g2.h[k1] = value;
+					_g3.h[k1] = value;
 				}
 			}
 		}
-		return tink_pure__$List_List_$Impl_$.prepend(ret,{ key : null, isset : false, value : null, condensed : _g2});
+		return tink_pure__$List_List_$Impl_$.prepend(ret,{ key : null, isset : false, value : null, condensed : _g3});
 	} else {
 		return ret;
 	}
+};
+var Version = $hxEnums["Version"] = { __ename__ : true, __constructs__ : ["SemVer","Latest","Unknown"]
+	,SemVer: ($_=function(major,minor,patch) { return {_hx_index:0,major:major,minor:minor,patch:patch,__enum__:"Version",toString:$estr}; },$_.__params__ = ["major","minor","patch"],$_)
+	,Latest: {_hx_index:1,__enum__:"Version",toString:$estr}
+	,Unknown: ($_=function(v) { return {_hx_index:2,v:v,__enum__:"Version",toString:$estr}; },$_.__params__ = ["v"],$_)
 };
 Math.__name__ = true;
 var Reflect = function() { };

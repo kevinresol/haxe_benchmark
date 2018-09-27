@@ -21,10 +21,25 @@ class LogParser {
 		var started = false;
 		var current:Array<Result> = [];
 		var section = null;
+		var haxeVer = null;
 		
 		var i = 0;
 		for(i in 0...lines.length) {
 			var line = lines[i];
+			
+			if(haxeVer == null && line.startsWith('$ export HAXE_VERSION=')) {
+				var ver = line.substr('$ export HAXE_VERSION='.length);
+				trace(ver);
+				haxeVer = 
+					if(ver == 'latest') {
+						Latest;
+					} else {
+						switch ver.split('.') {
+							case [major, minor, patch]: SemVer(Std.parseInt(major), Std.parseInt(minor), Std.parseInt(patch));
+							case _: Unknown(ver);
+						}
+					}
+			}
 			
 			if(line == END) {
 				started = false;
@@ -49,8 +64,14 @@ class LogParser {
 				
 			}
 			
-			if(line.startsWith(BUILD_FOLD)) 
+			if(line.startsWith(BUILD_FOLD)) {
 				target = line.substring(BUILD_FOLD.length, line.indexOf('.'));
+				switch haxeVer {
+					case SemVer(major, _, _) if(major < 4): // do nothing
+					case Unknown(_): // do nothing
+					case _: if(target == 'interp') target = 'eval';
+				}
+			}
 				
 			if(line == START)
 				started = true;
@@ -58,4 +79,10 @@ class LogParser {
 		
 		return targets;
 	}
+}
+
+enum Version {
+	SemVer(major:Int, minor:Int, patch:Int);
+	Latest;
+	Unknown(v:String);
 }
