@@ -31,6 +31,56 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+	<script>
+		Chart.plugins.register({
+			afterDatasetsDraw: function(chart) {
+				var ctx = chart.ctx;
+
+				chart.data.datasets.forEach(function(dataset, i) {
+					var meta = chart.getDatasetMeta(i);
+					if (!meta.hidden) {
+						meta.data.forEach(function(element, index) {
+							// Draw the text in black, with the specified font
+							ctx.fillStyle = 'rgb(0, 0, 0)';
+
+							var fontSize = 10;
+							var fontStyle = 'normal';
+							var fontFamily = 'Helvetica Neue, Helvetica, Arial';
+							ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+							// Just naively convert to string for now
+							var value = dataset.data[index];
+							var dataString;
+							if(value == null || isNaN(value)) dataString = 'NaN';
+							if(value < 10) {
+								dataString = dataset.data[index].toString()
+								var index = dataString.indexOf('.');
+								if(index != -1) {
+									dataString = dataString.substr(0, index + 4);
+								}
+							} else if (value > 1000000000) {
+								dataString = (value / 100000000 | 0) / 10 + 'B'
+							} else if (value > 1000000) {
+								dataString = (value / 100000 | 0) / 10 + 'M'
+							} else if(value > 1000) {
+								dataString = (value / 100 | 0) / 10 + 'K'
+							} else {
+								dataString = (value | 0).toString();
+							}
+
+							// Make sure alignment settings are correct
+							ctx.textAlign = 'center';
+							ctx.textBaseline = 'middle';
+
+							var padding = 1;
+							var position = element.tooltipPosition();
+							ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+						});
+					}
+				});
+			}
+		});
+	</script>
 	<script src="js/index.js"></script>
 	
 </body>
