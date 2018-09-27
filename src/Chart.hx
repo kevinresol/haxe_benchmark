@@ -1,6 +1,6 @@
 package ;
 
-import js.jquery.Helper.*;
+import js.html.*;
 
 using tink.CoreApi;
 
@@ -18,21 +18,19 @@ class Chart extends coconut.ui.View {
 		</div>
 	';
 	
-	override function afterInit(e) {
-		chart = new Chartjs(J(e).find('canvas'), config);
+	override function afterInit(e:Element) {
+		chart = new Chartjs(e.querySelector('canvas'), config);
 	}
 	
 	override function afterPatching(e) {
-		trace('patch');
 		for(field in Reflect.fields(config)) 
 			Reflect.setField(chart, field, Reflect.field(config, field));
 		
 		chart.update({duration: 0});
 	}
 	
-	override function afterDestroy(e) {
-		trace('destroy');
-		J(e).remove();
+	override function afterDestroy(e:Element) {
+		if(e.parentNode != null) e.parentNode.removeChild(e);
 	}
 }
 

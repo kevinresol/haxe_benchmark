@@ -187,7 +187,7 @@ ChartView.prototype = $extend(coconut_ui_View.prototype,{
 		return __r[0];
 	}
 	,afterInit: function(e) {
-		this.chart = new Chart($(e).find("canvas"),tink_state__$Observable_Observable_$Impl_$.get_value(this.__slots.config.observe()));
+		this.chart = new Chart(e.querySelector("canvas"),tink_state__$Observable_Observable_$Impl_$.get_value(this.__slots.config.observe()));
 	}
 	,afterPatching: function(e) {
 		console.log("src/Chart.hx:26:","patch");
@@ -202,7 +202,9 @@ ChartView.prototype = $extend(coconut_ui_View.prototype,{
 	}
 	,afterDestroy: function(e) {
 		console.log("src/Chart.hx:34:","destroy");
-		$(e).remove();
+		if(e.parentNode != null) {
+			e.parentNode.removeChild(e);
+		}
 	}
 	,toString: function() {
 		return "Chart" + "#" + this.viewId;
