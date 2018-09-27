@@ -32,7 +32,6 @@ class ArrayBenchmark {
 		});
 	}
 	
-	@:include
 	@:generic
 	@:variant(0)
 	@:variant(0.1)
@@ -45,7 +44,6 @@ class ArrayBenchmark {
 		return benchmark(#if cpp 1000000000 #else 1000000 #end, temp = array[0]);
 	}
 	
-	@:include
 	@:generic
 	@:variant(0)
 	@:variant(0.1)
