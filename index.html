@@ -58,6 +58,8 @@
 								if(index != -1) {
 									dataString = dataString.substr(0, index + 4);
 								}
+							} else if (value > 1000000000000) {
+								dataString = (value / 100000000000 | 0) / 10 + 'T'
 							} else if (value > 1000000000) {
 								dataString = (value / 100000000 | 0) / 10 + 'B'
 							} else if (value > 1000000) {
