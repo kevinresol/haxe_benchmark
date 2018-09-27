@@ -159,9 +159,9 @@ coconut_ui_View.prototype = $extend(coconut_vdom_Renderable.prototype,{
 	,__class__: coconut_ui_View
 });
 var ChartView = function(data) {
-	this.__tink_defaults10 = { width : null, height : null};
+	this.__tink_defaults17 = { width : null, height : null};
 	this.__slots = { config : new coconut_ui_tools_Slot(this,null), width : new coconut_ui_tools_Slot(this,null), height : new coconut_ui_tools_Slot(this,null)};
-	this.__tink_init11(data);
+	this.__tink_init18(data);
 	coconut_ui_View.call(this,$bind(this,this.render));
 };
 ChartView.__name__ = true;
@@ -169,7 +169,7 @@ ChartView.__init = function(attributes,inst) {
 	if(inst == null) {
 		inst = new ChartView(attributes);
 	} else {
-		inst.__tink_init11(attributes);
+		inst.__tink_init18(attributes);
 	}
 	return inst;
 };
@@ -207,12 +207,12 @@ ChartView.prototype = $extend(coconut_ui_View.prototype,{
 	,toString: function() {
 		return "Chart" + "#" + this.viewId;
 	}
-	,__tink_init11: function(attributes) {
+	,__tink_init18: function(attributes) {
 		this.__slots.config.setData(attributes.config);
 		var this1 = attributes.width;
-		this.__slots.width.setData(this1 == null ? this.__tink_defaults10.width : this1);
+		this.__slots.width.setData(this1 == null ? this.__tink_defaults17.width : this1);
 		var this2 = attributes.height;
-		this.__slots.height.setData(this2 == null ? this.__tink_defaults10.height : this2);
+		this.__slots.height.setData(this2 == null ? this.__tink_defaults17.height : this2);
 	}
 	,get_config: function() {
 		return tink_state__$Observable_Observable_$Impl_$.get_value(this.__slots.config.observe());
@@ -545,11 +545,17 @@ Reflect.copy = function(o) {
 };
 var Site = function(data) {
 	this.remote = new tink_web_proxy_Remote0(new tink_http_clients_SecureJsClient(),tink_web_proxy__$Remote_RemoteEndpoint_$Impl_$.sub(tink_web_proxy__$Remote_RemoteEndpoint_$Impl_$._new(tink_url__$Host_Host_$Impl_$._new("api.travis-ci.org",443)),{ path : [tink_url__$Portion_Portion_$Impl_$.ofString("v3")]}));
-	this.__tink_defaults2 = { };
+	this.__tink_defaults4 = { };
 	this.__slots = { };
 	var this1 = new tink_state__$State_SimpleState(null,null,null);
-	this.__coco_results = this1;
-	this.__tink_init3(data);
+	this.__coco_log = this1;
+	var this2 = new tink_state__$State_SimpleState(null,null,null);
+	this.__coco_results = this2;
+	var this3 = new tink_state__$State_SimpleState(null,null,null);
+	this.__coco_message = this3;
+	var this4 = new tink_state__$State_SimpleState(null,null,null);
+	this.__coco_sha = this4;
+	this.__tink_init5(data);
 	coconut_ui_View.call(this,$bind(this,this.render));
 };
 Site.__name__ = true;
@@ -560,7 +566,7 @@ Site.__init = function(attributes,inst) {
 	if(inst == null) {
 		inst = new Site(attributes);
 	} else {
-		inst.__tink_init3(attributes);
+		inst.__tink_init5(attributes);
 	}
 	return inst;
 };
@@ -578,33 +584,69 @@ Site.prototype = $extend(coconut_ui_View.prototype,{
 		__r3.push("All charts are in \"Operations per second\", higher is better");
 		__r2.push(vdom_VDom.h("div",__ret1,__r3));
 		__r1.push(vdom_VDom.h("h1",__ret,__r2));
-		if(tink_state__$State_State_$Impl_$.get_value(this.__coco_results) != null) {
+		if(tink_state__$State_State_$Impl_$.get_value(this.__coco_sha) != null) {
+			var __r4 = [];
+			__r4.push("Revision: ");
+			__r4.push(tink_state__$State_State_$Impl_$.get_value(this.__coco_message));
+			__r4.push(" (");
+			var __ret2 = { href : "https://github.com/kevinresol/haxe_benchmark/commit/" + tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_sha)};
+			var __r5 = [];
+			__r5.push(HxOverrides.substr(tink_state__$State_State_$Impl_$.get_value(this.__coco_sha),0,6));
+			__r4.push(vdom_VDom.h("a",__ret2,__r5));
+			__r4.push(")");
+			var __ret3 = { };
+			__r1.push(vdom_VDom.h("strong",__ret3,__r4));
+			var __ret4 = { };
+			__r1.push(vdom_VDom.h("br",__ret4));
+		}
+		if(tink_state__$State_State_$Impl_$.get_value(this.__coco_log) != null) {
 			var this1 = { f : function() {
+				return tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_log);
+			}};
+			var __ret5 = { log : tink_state__$Observable_Observable_$Impl_$.auto(this1)};
+			__r1.push(coconut_ui_tools_ViewCache.mk("Log",null,Log.__init,__ret5));
+		}
+		if(tink_state__$State_State_$Impl_$.get_value(this.__coco_results) != null) {
+			var this2 = { f : function() {
 				return tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_results);
 			}};
-			var __ret2 = { results : tink_state__$Observable_Observable_$Impl_$.auto(this1)};
-			__r1.push(coconut_ui_tools_ViewCache.mk("Charts",null,Charts.__init,__ret2));
+			var __ret6 = { results : tink_state__$Observable_Observable_$Impl_$.auto(this2)};
+			__r1.push(coconut_ui_tools_ViewCache.mk("Charts",null,Charts.__init,__ret6));
 		} else {
 			__r1.push("Loading");
 		}
-		var __ret3 = { };
-		__r.push(vdom_VDom.h("div",__ret3,__r1));
+		var __ret7 = { };
+		__r.push(vdom_VDom.h("div",__ret7,__r1));
 		return __r[0];
 	}
 	,afterInit: function(e) {
 		var _gthis = this;
 		tink_core__$Promise_Promise_$Impl_$.next(this.remote.repos().ofSlug("kevinresol/haxe_benchmark").builds().list(),function(res) {
-			return _gthis.remote.jobs().ofId(res.builds[0].jobs[0].id).log();
+			var _g = 0;
+			var _g1 = res.builds;
+			while(_g < _g1.length) {
+				var build = _g1[_g];
+				++_g;
+				if(build.state == "passed") {
+					var param = build.commit.message;
+					_gthis.__coco_message.set(param);
+					var param1 = build.commit.sha;
+					_gthis.__coco_sha.set(param1);
+					var job = build.jobs.pop();
+					return _gthis.remote.jobs().ofId(job.id).log();
+				}
+			}
+			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(null,"No builds",{ fileName : "src/Site.hx", lineNumber : 67, className : "Site", methodName : "afterInit"}))));
 		}).handle(function(o) {
 			switch(o._hx_index) {
 			case 0:
 				var res1 = o.data;
-				var param = LogParser.parse(res1.content);
-				_gthis.__coco_results.set(param);
+				var param2 = LogParser.parse(res1.content);
+				_gthis.__coco_results.set(param2);
 				break;
 			case 1:
 				var e1 = o.failure;
-				console.log("src/Site.hx:49:",e1);
+				console.log("src/Site.hx:74:",e1);
 				break;
 			}
 		});
@@ -612,7 +654,14 @@ Site.prototype = $extend(coconut_ui_View.prototype,{
 	,toString: function() {
 		return "Site" + "#" + this.viewId;
 	}
-	,__tink_init3: function(attributes) {
+	,__tink_init5: function(attributes) {
+	}
+	,get_log: function() {
+		return tink_state__$State_State_$Impl_$.get_value(this.__coco_log);
+	}
+	,set_log: function(param) {
+		this.__coco_log.set(param);
+		return param;
 	}
 	,get_results: function() {
 		return tink_state__$State_State_$Impl_$.get_value(this.__coco_results);
@@ -621,7 +670,57 @@ Site.prototype = $extend(coconut_ui_View.prototype,{
 		this.__coco_results.set(param);
 		return param;
 	}
+	,get_message: function() {
+		return tink_state__$State_State_$Impl_$.get_value(this.__coco_message);
+	}
+	,set_message: function(param) {
+		this.__coco_message.set(param);
+		return param;
+	}
+	,get_sha: function() {
+		return tink_state__$State_State_$Impl_$.get_value(this.__coco_sha);
+	}
+	,set_sha: function(param) {
+		this.__coco_sha.set(param);
+		return param;
+	}
 	,__class__: Site
+});
+var Log = function(data) {
+	this.__tink_defaults2 = { };
+	this.__slots = { log : new coconut_ui_tools_Slot(this,null)};
+	this.__tink_init3(data);
+	coconut_ui_View.call(this,$bind(this,this.render));
+};
+Log.__name__ = true;
+Log.__init = function(attributes,inst) {
+	if(inst == null) {
+		inst = new Log(attributes);
+	} else {
+		inst.__tink_init3(attributes);
+	}
+	return inst;
+};
+Log.__super__ = coconut_ui_View;
+Log.prototype = $extend(coconut_ui_View.prototype,{
+	render: function() {
+		var __r = [];
+		var __r1 = [];
+		__r1.push(tink_state__$Observable_Observable_$Impl_$.get_value(this.__slots.log.observe()));
+		var __ret = { };
+		__r.push(vdom_VDom.h("pre",__ret,__r1));
+		return __r[0];
+	}
+	,toString: function() {
+		return "Log" + "#" + this.viewId;
+	}
+	,__tink_init3: function(attributes) {
+		this.__slots.log.setData(attributes.log);
+	}
+	,get_log: function() {
+		return tink_state__$Observable_Observable_$Impl_$.get_value(this.__slots.log.observe());
+	}
+	,__class__: Log
 });
 var Charts = function(data) {
 	this.__tink_defaults0 = { };
@@ -8220,10 +8319,14 @@ tink_json_Parser0.prototype = $extend(tink_json_BasicParser.prototype,{
 	}
 	,parse1: function() {
 		var _gthis = this;
+		var v_commit = null;
+		var hasv_commit = false;
 		var v_id = 0;
 		var hasv_id = false;
 		var v_jobs = null;
 		var hasv_jobs = false;
+		var v_state = null;
+		var hasv_state = false;
 		var __start__ = this.pos;
 		while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
 		var tmp;
@@ -8261,7 +8364,10 @@ tink_json_Parser0.prototype = $extend(tink_json_BasicParser.prototype,{
 				if(!tmp2) {
 					this.die("Expected :");
 				}
-				if("jobs".length == __name__.max - __name__.min && __name__.source.substring(__name__.min,__name__.max) == "jobs") {
+				if("state".length == __name__.max - __name__.min && __name__.source.substring(__name__.min,__name__.max) == "state") {
+					v_state = tink_json__$Parser_JsonString_$Impl_$.toString(this.parseString());
+					hasv_state = true;
+				} else if("jobs".length == __name__.max - __name__.min && __name__.source.substring(__name__.min,__name__.max) == "jobs") {
 					while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
 					var v_jobs1;
 					if(this.max > this.pos && this.source.charCodeAt(this.pos) == 91) {
@@ -8286,7 +8392,7 @@ tink_json_Parser0.prototype = $extend(tink_json_BasicParser.prototype,{
 					}
 					if(!v_jobs2) {
 						while(true) {
-							__ret.push(this.parse2());
+							__ret.push(this.parse3());
 							while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
 							var v_jobs3;
 							if(this.max > this.pos && this.source.charCodeAt(this.pos) == 44) {
@@ -8315,6 +8421,98 @@ tink_json_Parser0.prototype = $extend(tink_json_BasicParser.prototype,{
 					}
 					v_jobs = __ret;
 					hasv_jobs = true;
+				} else if("id".length == __name__.max - __name__.min && __name__.source.substring(__name__.min,__name__.max) == "id") {
+					var this1 = this.parseNumber();
+					v_id = Std.parseInt(this1.source.substring(this1.min,this1.max));
+					hasv_id = true;
+				} else if("commit".length == __name__.max - __name__.min && __name__.source.substring(__name__.min,__name__.max) == "commit") {
+					v_commit = this.parse2();
+					hasv_commit = true;
+				} else {
+					this.skipValue();
+				}
+				while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
+				var tmp3;
+				if(this.max > this.pos && this.source.charCodeAt(this.pos) == 44) {
+					this.pos += 1;
+					while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
+					tmp3 = true;
+				} else {
+					tmp3 = false;
+				}
+				if(!tmp3) {
+					break;
+				}
+			}
+			while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
+			var tmp4;
+			if(this.max > this.pos && this.source.charCodeAt(this.pos) == 125) {
+				this.pos += 1;
+				while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
+				tmp4 = true;
+			} else {
+				tmp4 = false;
+			}
+			if(!tmp4) {
+				this.die("Expected }");
+			}
+		}
+		var __missing__ = function(field) {
+			return _gthis.die("missing field \"" + field + "\"",__start__);
+		};
+		return { commit : hasv_commit ? v_commit : __missing__("commit"), id : hasv_id ? v_id : __missing__("id"), jobs : hasv_jobs ? v_jobs : __missing__("jobs"), state : hasv_state ? v_state : __missing__("state")};
+	}
+	,parse2: function() {
+		var _gthis = this;
+		var v_id = 0;
+		var hasv_id = false;
+		var v_message = null;
+		var hasv_message = false;
+		var v_sha = null;
+		var hasv_sha = false;
+		var __start__ = this.pos;
+		while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
+		var tmp;
+		if(this.max > this.pos && this.source.charCodeAt(this.pos) == 123) {
+			this.pos += 1;
+			while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
+			tmp = true;
+		} else {
+			tmp = false;
+		}
+		if(!tmp) {
+			this.die("Expected {");
+		}
+		while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
+		var tmp1;
+		if(this.max > this.pos && this.source.charCodeAt(this.pos) == 125) {
+			this.pos += 1;
+			while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
+			tmp1 = true;
+		} else {
+			tmp1 = false;
+		}
+		if(!tmp1) {
+			while(true) {
+				var __name__ = this.parseString();
+				while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
+				var tmp2;
+				if(this.max > this.pos && this.source.charCodeAt(this.pos) == 58) {
+					this.pos += 1;
+					while(this.pos < this.max && this.source.charCodeAt(this.pos) < 33) this.pos++;
+					tmp2 = true;
+				} else {
+					tmp2 = false;
+				}
+				if(!tmp2) {
+					this.die("Expected :");
+				}
+				if("sha".length == __name__.max - __name__.min && __name__.source.substring(__name__.min,__name__.max) == "sha") {
+					v_sha = tink_json__$Parser_JsonString_$Impl_$.toString(this.parseString());
+					hasv_sha = true;
+				} else if("message".length == __name__.max - __name__.min && __name__.source.substring(__name__.min,__name__.max) == "message") {
+					v_message = tink_json__$Parser_JsonString_$Impl_$.toString(this.parseString());
+					hasv_message = true;
 				} else if("id".length == __name__.max - __name__.min && __name__.source.substring(__name__.min,__name__.max) == "id") {
 					var this1 = this.parseNumber();
 					v_id = Std.parseInt(this1.source.substring(this1.min,this1.max));
@@ -8351,9 +8549,9 @@ tink_json_Parser0.prototype = $extend(tink_json_BasicParser.prototype,{
 		var __missing__ = function(field) {
 			return _gthis.die("missing field \"" + field + "\"",__start__);
 		};
-		return { id : hasv_id ? v_id : __missing__("id"), jobs : hasv_jobs ? v_jobs : __missing__("jobs")};
+		return { id : hasv_id ? v_id : __missing__("id"), message : hasv_message ? v_message : __missing__("message"), sha : hasv_sha ? v_sha : __missing__("sha")};
 	}
-	,parse2: function() {
+	,parse3: function() {
 		var _gthis = this;
 		var v_id = 0;
 		var hasv_id = false;

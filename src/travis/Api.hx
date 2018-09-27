@@ -59,11 +59,20 @@ typedef BuildResponse = {
 	> BaseResponse,
 	id:Int,
 	jobs:Array<JobResponse>,
+	state:String,
+	commit:CommitResponse,
 }
 
 typedef JobResponse = {
 	> BaseResponse,
 	id:Int,
+}
+
+typedef CommitResponse = {
+	> BaseResponse,
+	id:Int,
+	sha:String,
+	message:String,
 }
 
 typedef LogResponse = {

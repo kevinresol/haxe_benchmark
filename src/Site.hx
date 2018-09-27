@@ -8,6 +8,7 @@ import tink.web.proxy.Remote;
 import tink.url.Host;
 import haxe.crypto.*;
 
+using tink.CoreApi;
 using Lambda;
 
 class Site extends coconut.ui.View {
@@ -22,7 +23,10 @@ class Site extends coconut.ui.View {
 		document.body.appendChild(new Site({}).toElement());
 	}
 	
+	@:state var log:String = null;
 	@:state var results:Mapping<String, List<Result>> = null;
+	@:state var message:String = null;
+	@:state var sha:String = null;
 	
 	function render() '
 		<div>
@@ -32,6 +36,14 @@ class Site extends coconut.ui.View {
 					All charts are in "Operations per second", higher is better
 				</div>
 			</h1>
+			
+			<if ${sha != null}>
+				<strong>Revision: ${message} (<a href="https://github.com/kevinresol/haxe_benchmark/commit/${sha}">${sha.substr(0, 6)}</a>)</strong><br/>
+			</if>
+			
+			<if ${log != null}>
+				<Log log=${log}/>
+			</if>
 			
 			<if ${results != null}>
 				<Charts results=${results}/>
@@ -43,12 +55,33 @@ class Site extends coconut.ui.View {
 	
 	override function afterInit(e) {
 		remote.repos().ofSlug('kevinresol/haxe_benchmark').builds().list()
-			.next(res -> remote.jobs().ofId(res.builds[0].jobs[0].id).log())
+			.next(function(res) {
+				for(build in res.builds) {
+					if(build.state == 'passed') {
+						message = build.commit.message;
+						sha = build.commit.sha;
+						var job = build.jobs.pop();
+						return remote.jobs().ofId(job.id).log();
+					}
+				}
+				return new Error('No builds');
+			})
 			.handle(function(o) switch o {
-				case Success(res): results = LogParser.parse(res.content);
-				case Failure(e): trace(e);
+				case Success(res): 
+					// log = res.content;
+					results = LogParser.parse(res.content);
+				case Failure(e):
+					trace(e);
 			});
 	}
+}
+
+class Log extends coconut.ui.View {
+	@:attr var log:String;
+	
+	function render() '
+		<pre>${log}</pre>
+	';
 }
 
 class Charts extends coconut.ui.View {
