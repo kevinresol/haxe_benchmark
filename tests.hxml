@@ -1,4 +1,4 @@
 -cp src
 -main Main
--dce full
+# -dce full
 -lib tink_unittest
