@@ -12,7 +12,7 @@ class Main {
 	
 	static function main() {
 		
-		#if php untyped ini_set('memory_limit', '2048M'); #end
+		#if php untyped __call__('ini_set', 'memory_limit', '2048M'); #end
 		
 		Logger.println(START);
 		Runner.run(TestBatch.make([
