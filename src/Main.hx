@@ -11,6 +11,9 @@ class Main {
 	static inline var END = '>> Haxe Benchmark Log End <<';
 	
 	static function main() {
+		
+		#if php untyped ini_set('memory_limit', '2048M'); #end
+		
 		Logger.println(START);
 		Runner.run(TestBatch.make([
 			new ArrayBenchmark(),

@@ -18,7 +18,6 @@ class ArrayBenchmark {
 		var array = [];
 		return benchmark(1000000, array.push(v));
 	}
-	
 	@:generic
 	@:variant(0)
 	@:variant(0.1)
@@ -27,12 +26,13 @@ class ArrayBenchmark {
 	@:variant(this)
 	public function iterate<T>(v:T):Assertions {
 		var array = [for(_ in 0...10000) v];
-		return benchmark(#if (php || python || lua || neko) 100 #else 10000 #end, {
+		return benchmark(#if (php || python || lua || neko) 100 #elseif cpp 1000000000 #else 10000 #end, {
 			result = 0;
 			for(i in array) result++;
 		});
 	}
 	
+	@:include
 	@:generic
 	@:variant(0)
 	@:variant(0.1)
@@ -40,11 +40,12 @@ class ArrayBenchmark {
 	@:variant(true)
 	@:variant(this)
 	public function getFirst<T>(v:T):Assertions {
-		var array = [for(_ in 0...1000000) v];
+		var array = [for(_ in 0...10000000) v];
 		var temp;
-		return benchmark(1000000, temp = array[0]);
+		return benchmark(#if cpp 1000000000 #else 1000000 #end, temp = array[0]);
 	}
 	
+	@:include
 	@:generic
 	@:variant(0)
 	@:variant(0.1)
@@ -52,9 +53,9 @@ class ArrayBenchmark {
 	@:variant(true)
 	@:variant(this)
 	public function getLast<T>(v:T):Assertions {
-		var array = [for(_ in 0...1000000) v];
+		var array = [for(_ in 0...10000000) v];
 		var temp;
-		return benchmark(1000000, temp = array[1000000 - 1]);
+		return benchmark(#if cpp 1000000000 #else 1000000 #end, temp = array[10000000 - 1]);
 	}
 	
 	@:generic
