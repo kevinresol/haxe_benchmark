@@ -27,7 +27,7 @@ class ArrayBenchmark {
 	@:variant(this)
 	public function iterate<T>(v:T):Assertions {
 		var array = [for(_ in 0...10000) v];
-		return benchmark(#if (php || python || lua) 100 #else 10000 #end, {
+		return benchmark(#if (php || python || lua || neko) 100 #else 10000 #end, {
 			result = 0;
 			for(i in array) result++;
 		});
@@ -100,7 +100,7 @@ class ArrayBenchmark {
 		var array = [for(_ in 0...1000) v];
 		array[0] = i;
 		result = 0;
-		return benchmark(#if (php || js || cpp) 100000 #else 1000 #end, result += array.indexOf(i));
+		return benchmark(#if (php || js || cpp || neko || node || cs || java) 100000 #else 1000 #end, result += array.indexOf(i));
 	}
 	
 	@:generic
@@ -113,7 +113,7 @@ class ArrayBenchmark {
 		var array = [for(_ in 0...1000) v];
 		array[array.length - 1] = i;
 		result = 0;
-		return benchmark(#if (js || cpp) 100000 #else 1000 #end, result += array.indexOf(i));
+		return benchmark(#if (js || cpp || cs || java) 100000 #else 1000 #end, result += array.indexOf(i));
 	}
 	
 	@:keep
