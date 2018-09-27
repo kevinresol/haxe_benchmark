@@ -5,4 +5,5 @@ Mainly for comparing the equivalent operations across targets.
 
 ## Results
 
-Click on the Travis badge and select a log to read the benchmark results.
+See the comparison charts here: https://kevinresol.github.io/haxe_benchmark  
+You can also click on the Travis badge on this page and select a log to read the raw benchmark results.
