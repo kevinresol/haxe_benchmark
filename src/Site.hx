@@ -31,7 +31,7 @@ class Site extends coconut.ui.View {
 	function render() '
 		<div>
 			<h1 class="ui header">
-				Haxe Benchmark
+				Haxe Benchmark (<a href="https://github.com/kevinresol/haxe_benchmark">Github</a>)
 				<div class="sub header">
 					All charts are in "Operations per second", higher is better
 				</div>
@@ -92,7 +92,7 @@ class Charts extends coconut.ui.View {
 			<let sections=${getSections()}>
 				<for ${section in sections.keys()}>
 					<div class="ui segment">
-						<h3 class="ui header">${section}</h3>
+						<h3 class="ui header">${section} (<a href="https://github.com/kevinresol/haxe_benchmark/blob/master/src/benchmark/${section}.hx">Source</a>)</h3>
 						<div class="ui two column stackable grid">
 							<for ${config in sections[section]}>
 								<div class="column">

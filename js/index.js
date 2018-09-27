@@ -617,45 +617,50 @@ Site.prototype = $extend(coconut_ui_View.prototype,{
 		var __r1 = [];
 		var __ret = { className : vdom__$Attr_ClassName_$Impl_$.ofString("ui header")};
 		var __r2 = [];
-		__r2.push("Haxe Benchmark");
-		var __ret1 = { className : vdom__$Attr_ClassName_$Impl_$.ofString("sub header")};
+		__r2.push("Haxe Benchmark (");
 		var __r3 = [];
-		__r3.push("All charts are in \"Operations per second\", higher is better");
-		__r2.push(vdom_VDom.h("div",__ret1,__r3));
+		__r3.push("Github");
+		var __ret1 = { href : "https://github.com/kevinresol/haxe_benchmark"};
+		__r2.push(vdom_VDom.h("a",__ret1,__r3));
+		__r2.push(")");
+		var __ret2 = { className : vdom__$Attr_ClassName_$Impl_$.ofString("sub header")};
+		var __r4 = [];
+		__r4.push("All charts are in \"Operations per second\", higher is better");
+		__r2.push(vdom_VDom.h("div",__ret2,__r4));
 		__r1.push(vdom_VDom.h("h1",__ret,__r2));
 		if(tink_state__$State_State_$Impl_$.get_value(this.__coco_sha) != null) {
-			var __r4 = [];
-			__r4.push("Revision: ");
-			__r4.push(tink_state__$State_State_$Impl_$.get_value(this.__coco_message));
-			__r4.push(" (");
-			var __ret2 = { href : "https://github.com/kevinresol/haxe_benchmark/commit/" + tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_sha)};
 			var __r5 = [];
-			__r5.push(HxOverrides.substr(tink_state__$State_State_$Impl_$.get_value(this.__coco_sha),0,6));
-			__r4.push(vdom_VDom.h("a",__ret2,__r5));
-			__r4.push(")");
-			var __ret3 = { };
-			__r1.push(vdom_VDom.h("strong",__ret3,__r4));
+			__r5.push("Revision: ");
+			__r5.push(tink_state__$State_State_$Impl_$.get_value(this.__coco_message));
+			__r5.push(" (");
+			var __ret3 = { href : "https://github.com/kevinresol/haxe_benchmark/commit/" + tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_sha)};
+			var __r6 = [];
+			__r6.push(HxOverrides.substr(tink_state__$State_State_$Impl_$.get_value(this.__coco_sha),0,6));
+			__r5.push(vdom_VDom.h("a",__ret3,__r6));
+			__r5.push(")");
 			var __ret4 = { };
-			__r1.push(vdom_VDom.h("br",__ret4));
+			__r1.push(vdom_VDom.h("strong",__ret4,__r5));
+			var __ret5 = { };
+			__r1.push(vdom_VDom.h("br",__ret5));
 		}
 		if(tink_state__$State_State_$Impl_$.get_value(this.__coco_log) != null) {
 			var this1 = { f : function() {
 				return tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_log);
 			}};
-			var __ret5 = { log : tink_state__$Observable_Observable_$Impl_$.auto(this1)};
-			__r1.push(coconut_ui_tools_ViewCache.mk("Log",null,Log.__init,__ret5));
+			var __ret6 = { log : tink_state__$Observable_Observable_$Impl_$.auto(this1)};
+			__r1.push(coconut_ui_tools_ViewCache.mk("Log",null,Log.__init,__ret6));
 		}
 		if(tink_state__$State_State_$Impl_$.get_value(this.__coco_results) != null) {
 			var this2 = { f : function() {
 				return tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_results);
 			}};
-			var __ret6 = { results : tink_state__$Observable_Observable_$Impl_$.auto(this2)};
-			__r1.push(coconut_ui_tools_ViewCache.mk("Charts",null,Charts.__init,__ret6));
+			var __ret7 = { results : tink_state__$Observable_Observable_$Impl_$.auto(this2)};
+			__r1.push(coconut_ui_tools_ViewCache.mk("Charts",null,Charts.__init,__ret7));
 		} else {
 			__r1.push("Loading");
 		}
-		var __ret7 = { };
-		__r.push(vdom_VDom.h("div",__ret7,__r1));
+		var __ret8 = { };
+		__r.push(vdom_VDom.h("div",__ret8,__r1));
 		return __r[0];
 	}
 	,afterInit: function(e) {
@@ -791,31 +796,37 @@ Charts.prototype = $extend(coconut_ui_View.prototype,{
 			var __ret1 = { className : vdom__$Attr_ClassName_$Impl_$.ofString("ui header")};
 			var __r3 = [];
 			__r3.push(section1);
-			__r2.push(vdom_VDom.h("h3",__ret1,__r3));
-			var __ret2 = { className : vdom__$Attr_ClassName_$Impl_$.ofString("ui two column stackable grid")};
-			var attr1 = __ret2;
+			__r3.push(" (");
 			var __r4 = [];
+			__r4.push("Source");
+			var __ret2 = { href : "https://github.com/kevinresol/haxe_benchmark/blob/master/src/benchmark/" + section1 + ".hx"};
+			__r3.push(vdom_VDom.h("a",__ret2,__r4));
+			__r3.push(")");
+			__r2.push(vdom_VDom.h("h3",__ret1,__r3));
+			var __ret3 = { className : vdom__$Attr_ClassName_$Impl_$.ofString("ui two column stackable grid")};
+			var attr1 = __ret3;
+			var __r5 = [];
 			var _g = 0;
 			var _g1 = __map_reserved[section1] != null ? sections.getReserved(section1) : sections.h[section1];
 			while(_g < _g1.length) {
 				var config = [_g1[_g]];
 				++_g;
-				var __ret3 = { className : vdom__$Attr_ClassName_$Impl_$.ofString("column")};
-				var __r5 = [];
+				var __ret4 = { className : vdom__$Attr_ClassName_$Impl_$.ofString("column")};
+				var __r6 = [];
 				var this1 = { f : (function(config1) {
 					return function() {
 						return config1[0];
 					};
 				})(config)};
-				var __ret4 = { config : tink_state__$Observable_Observable_$Impl_$.auto(this1), width : tink_state__$Observable_Observable_$Impl_$["const"]("400"), height : tink_state__$Observable_Observable_$Impl_$["const"]("200")};
-				__r5.push(coconut_ui_tools_ViewCache.mk("Chart",null,ChartView.__init,__ret4));
-				__r4.push(vdom_VDom.h("div",__ret3,__r5));
+				var __ret5 = { config : tink_state__$Observable_Observable_$Impl_$.auto(this1), width : tink_state__$Observable_Observable_$Impl_$["const"]("400"), height : tink_state__$Observable_Observable_$Impl_$["const"]("200")};
+				__r6.push(coconut_ui_tools_ViewCache.mk("Chart",null,ChartView.__init,__ret5));
+				__r5.push(vdom_VDom.h("div",__ret4,__r6));
 			}
-			__r2.push(vdom_VDom.h("div",attr1,__r4));
+			__r2.push(vdom_VDom.h("div",attr1,__r5));
 			__r1.push(vdom_VDom.h("div",attr,__r2));
 		}
-		var __ret5 = { };
-		__r.push(vdom_VDom.h("div",__ret5,__r1));
+		var __ret6 = { };
+		__r.push(vdom_VDom.h("div",__ret6,__r1));
 		return __r[0];
 	}
 	,getSections: function() {
