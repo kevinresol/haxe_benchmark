@@ -1,0 +1,10 @@
+-D coconut.vdom=0.6.1
+# @install: lix --silent download "gh://github.com/mvcoconut/coconut.vdom#1e37908539d117968c869840a4d2e224ca2fae9f" into coconut.vdom/0.6.1/github/1e37908539d117968c869840a4d2e224ca2fae9f
+-lib tink_hxx
+-lib tink_state
+-lib coconut.ui
+-lib tink_csss
+-lib js-virtual-dom
+-cp ${HAXE_LIBCACHE}/coconut.vdom/0.6.1/github/1e37908539d117968c869840a4d2e224ca2fae9f/src
+--macro coconut.vdom.macros.Setup.all()
+-D coconut_vdom

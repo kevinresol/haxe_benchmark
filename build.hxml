@@ -1,0 +1,6 @@
+-cp src
+-js js/index.js
+-main Site
+
+-lib coconut.vdom
+-lib tink_web
