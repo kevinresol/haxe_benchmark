@@ -36,9 +36,3 @@ class Chart extends coconut.ui.View {
 	}
 }
 
-
-@:native('Chart')
-private extern class Chartjs {
-	function new(e:Dynamic, config:{});
-	function update(?config:{}):Void;
-}

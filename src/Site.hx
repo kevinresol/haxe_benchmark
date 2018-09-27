@@ -20,6 +20,45 @@ class Site extends coconut.ui.View {
 		);
 		
 	static function main() {
+		Chartjs.plugins.register({
+			afterDatasetsDraw: function(chart) {
+				var ctx = chart.ctx;
+
+				chart.data.datasets.forEach(function(dataset, i) {
+					var meta = chart.getDatasetMeta(i);
+					if (!meta.hidden) {
+						meta.data.forEach(function(element, index) {
+							// Draw the text in black, with the specified font
+							ctx.fillStyle = 'rgb(0, 0, 0)';
+
+							var fontSize = 10;
+							var fontStyle = 'normal';
+							var fontFamily = 'Helvetica Neue, Helvetica, Arial';
+							ctx.font = Chartjs.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+							// Just naively convert to string for now
+							var value = dataset.data[index];
+							var str = Format.number(value);
+							
+							// Make sure alignment settings are correct
+							ctx.textAlign = 'center';
+							ctx.textBaseline = 'middle';
+
+							var padding = 1;
+							var position = element.tooltipPosition();
+							var y = position.y - (fontSize / 2) - padding;
+							if(y < 28) {
+								y = 28;
+								str = '( $str )';
+							}
+							ctx.fillText(str, position.x, y);
+						});
+					}
+				});
+			}
+		});
+		
+		
 		document.body.appendChild(new Site({}).toElement());
 	}
 	
@@ -27,18 +66,24 @@ class Site extends coconut.ui.View {
 	@:state var results:Mapping<String, List<Result>> = null;
 	@:state var message:String = null;
 	@:state var sha:String = null;
+	@:state var jobId:Int = null;
 	
 	function render() '
 		<div>
 			<h1 class="ui header">
 				Haxe Benchmark (<a href="https://github.com/kevinresol/haxe_benchmark">Github</a>)
 				<div class="sub header">
-					All charts are in "Operations per second", higher is better
+					All chart values are in "operations per second", higher is better<br/>
+					Data labels wrapped in parenthesis means that they exceed the chart bounds, i.e. much much faster than other targets
 				</div>
 			</h1>
 			
-			<if ${sha != null}>
-				<strong>Revision: ${message} (<a href="https://github.com/kevinresol/haxe_benchmark/commit/${sha}">${sha.substr(0, 6)}</a>)</strong><br/>
+			<if ${sha != null && jobId != null}>
+				<div style="margin-bottom:1em">
+					<strong>
+						Revision: ${message} (<a href="https://github.com/kevinresol/haxe_benchmark/commit/${sha}">${sha.substr(0, 6)}</a>) - <a href="https://travis-ci.org/kevinresol/haxe_benchmark/jobs/$jobId">Raw Build Log</a>
+					</strong>
+				</div>
 			</if>
 			
 			<if ${log != null}>
@@ -48,7 +93,7 @@ class Site extends coconut.ui.View {
 			<if ${results != null}>
 				<Charts results=${results}/>
 			<else>
-				Loading
+				<div class="ui basic segment">Loading</div>
 			</if>
 		</div>
 	';
@@ -61,7 +106,7 @@ class Site extends coconut.ui.View {
 						message = build.commit.message;
 						sha = build.commit.sha;
 						var job = build.jobs.pop();
-						return remote.jobs().ofId(job.id).log();
+						return remote.jobs().ofId(jobId = job.id).log();
 					}
 				}
 				return new Error('No builds');
@@ -128,21 +173,34 @@ class Charts extends coconut.ui.View {
 			var configs = ret[section] = [];
 			var operations = sections[section];
 			for(title in operations.keys()) {
+				var data = targets.map(target -> switch operations[title].find(op -> op.target == target) {
+					case null: null;
+					case v: v.value;
+				});
+				
 				configs.push({
 					type: 'bar',
 					data: {
 						labels: targets,
 						datasets: [{
 							// label: title,
-							data:
-								targets.map(target -> switch operations[title].find(op -> op.target == target) {
-									case null: null;
-									case v: v.value;
-								}),
+							data: data,
 							backgroundColor: colors,
 						}],
 					},
 					options: {
+						scales: {
+							yAxes: [{
+								ticks: {
+									max: {
+										var copy = data.filter(v -> v != null);
+										copy.sort(Reflect.compare);
+										copy[copy.length - 2] * 1.5;
+									},
+									callback: (value, inidex, values) -> Format.number(value),
+								}
+							}]
+						},
 						title: {
 							display: true, 
 							text: title,

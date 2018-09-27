@@ -159,9 +159,9 @@ coconut_ui_View.prototype = $extend(coconut_vdom_Renderable.prototype,{
 	,__class__: coconut_ui_View
 });
 var ChartView = function(data) {
-	this.__tink_defaults17 = { width : null, height : null};
+	this.__tink_defaults18 = { width : null, height : null};
 	this.__slots = { config : new coconut_ui_tools_Slot(this,null), width : new coconut_ui_tools_Slot(this,null), height : new coconut_ui_tools_Slot(this,null)};
-	this.__tink_init18(data);
+	this.__tink_init19(data);
 	coconut_ui_View.call(this,$bind(this,this.render));
 };
 ChartView.__name__ = true;
@@ -169,7 +169,7 @@ ChartView.__init = function(attributes,inst) {
 	if(inst == null) {
 		inst = new ChartView(attributes);
 	} else {
-		inst.__tink_init18(attributes);
+		inst.__tink_init19(attributes);
 	}
 	return inst;
 };
@@ -207,12 +207,12 @@ ChartView.prototype = $extend(coconut_ui_View.prototype,{
 	,toString: function() {
 		return "Chart" + "#" + this.viewId;
 	}
-	,__tink_init18: function(attributes) {
+	,__tink_init19: function(attributes) {
 		this.__slots.config.setData(attributes.config);
 		var this1 = attributes.width;
-		this.__slots.width.setData(this1 == null ? this.__tink_defaults17.width : this1);
+		this.__slots.width.setData(this1 == null ? this.__tink_defaults18.width : this1);
 		var this2 = attributes.height;
-		this.__slots.height.setData(this2 == null ? this.__tink_defaults17.height : this2);
+		this.__slots.height.setData(this2 == null ? this.__tink_defaults18.height : this2);
 	}
 	,get_config: function() {
 		return tink_state__$Observable_Observable_$Impl_$.get_value(this.__slots.config.observe());
@@ -340,6 +340,30 @@ EReg.prototype = {
 		}
 	}
 	,__class__: EReg
+};
+var Format = function() { };
+Format.__name__ = true;
+Format.number = function(value) {
+	if(value == null || isNaN(value)) {
+		return "NaN";
+	} else if(value < 10) {
+		var str = value == null ? "null" : "" + value;
+		var index = str.indexOf(".");
+		if(index != -1) {
+			str = HxOverrides.substr(str,0,index + 4);
+		}
+		return str;
+	} else if(value > 1000000000000) {
+		return (value / 100000000000 | 0) / 10 + "T";
+	} else if(value > 1000000000) {
+		return (value / 100000000 | 0) / 10 + "B";
+	} else if(value > 1000000) {
+		return (value / 100000 | 0) / 10 + "M";
+	} else if(value > 1000) {
+		return (value / 100 | 0) / 10 + "K";
+	} else {
+		return Std.string(value | 0);
+	}
 };
 var HxOverrides = function() { };
 HxOverrides.__name__ = true;
@@ -594,11 +618,40 @@ var Site = function(data) {
 	this.__coco_message = this3;
 	var this4 = new tink_state__$State_SimpleState(null,null,null);
 	this.__coco_sha = this4;
+	var this5 = new tink_state__$State_SimpleState(null,null,null);
+	this.__coco_jobId = this5;
 	this.__tink_init5(data);
 	coconut_ui_View.call(this,$bind(this,this.render));
 };
 Site.__name__ = true;
 Site.main = function() {
+	Chart.plugins.register({ afterDatasetsDraw : function(chart) {
+		var ctx = chart.ctx;
+		chart.data.datasets.forEach(function(dataset,i) {
+			var meta = chart.getDatasetMeta(i);
+			if(!meta.hidden) {
+				meta.data.forEach(function(element,index) {
+					ctx.fillStyle = "rgb(0, 0, 0)";
+					var fontSize = 10;
+					var fontStyle = "normal";
+					var fontFamily = "Helvetica Neue, Helvetica, Arial";
+					ctx.font = Chart.helpers.fontString(fontSize,fontStyle,fontFamily);
+					var value = dataset.data[index];
+					var str = Format.number(value);
+					ctx.textAlign = "center";
+					ctx.textBaseline = "middle";
+					var padding = 1;
+					var position = element.tooltipPosition();
+					var y = position.y - fontSize / 2 - padding;
+					if(y < 28) {
+						y = 28;
+						str = "( " + str + " )";
+					}
+					ctx.fillText(str,position.x,y);
+				});
+			}
+		});
+	}});
 	window.document.body.appendChild(new Site({ }).init());
 };
 Site.__init = function(attributes,inst) {
@@ -625,42 +678,53 @@ Site.prototype = $extend(coconut_ui_View.prototype,{
 		__r2.push(")");
 		var __ret2 = { className : vdom__$Attr_ClassName_$Impl_$.ofString("sub header")};
 		var __r4 = [];
-		__r4.push("All charts are in \"Operations per second\", higher is better");
+		__r4.push("All chart values are in \"operations per second\", higher is better");
+		var __ret3 = { };
+		__r4.push(vdom_VDom.h("br",__ret3));
+		__r4.push("Data labels wrapped in parenthesis means that they exceed the chart bounds, i.e. much much faster than other targets");
 		__r2.push(vdom_VDom.h("div",__ret2,__r4));
 		__r1.push(vdom_VDom.h("h1",__ret,__r2));
-		if(tink_state__$State_State_$Impl_$.get_value(this.__coco_sha) != null) {
+		if(tink_state__$State_State_$Impl_$.get_value(this.__coco_sha) != null && tink_state__$State_State_$Impl_$.get_value(this.__coco_jobId) != null) {
+			var __ret4 = { style : vdom__$Style_Style_$Impl_$.ofString("margin-bottom:1em")};
 			var __r5 = [];
-			__r5.push("Revision: ");
-			__r5.push(tink_state__$State_State_$Impl_$.get_value(this.__coco_message));
-			__r5.push(" (");
-			var __ret3 = { href : "https://github.com/kevinresol/haxe_benchmark/commit/" + tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_sha)};
 			var __r6 = [];
-			__r6.push(HxOverrides.substr(tink_state__$State_State_$Impl_$.get_value(this.__coco_sha),0,6));
-			__r5.push(vdom_VDom.h("a",__ret3,__r6));
-			__r5.push(")");
-			var __ret4 = { };
-			__r1.push(vdom_VDom.h("strong",__ret4,__r5));
-			var __ret5 = { };
-			__r1.push(vdom_VDom.h("br",__ret5));
+			__r6.push("Revision: ");
+			__r6.push(tink_state__$State_State_$Impl_$.get_value(this.__coco_message));
+			__r6.push(" (");
+			var __ret5 = { href : "https://github.com/kevinresol/haxe_benchmark/commit/" + tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_sha)};
+			var __r7 = [];
+			__r7.push(HxOverrides.substr(tink_state__$State_State_$Impl_$.get_value(this.__coco_sha),0,6));
+			__r6.push(vdom_VDom.h("a",__ret5,__r7));
+			__r6.push(") - ");
+			var __ret6 = { href : "https://travis-ci.org/kevinresol/haxe_benchmark/jobs/" + tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_jobId)};
+			var __r8 = [];
+			__r8.push("Raw Build Log");
+			__r6.push(vdom_VDom.h("a",__ret6,__r8));
+			var __ret7 = { };
+			__r5.push(vdom_VDom.h("strong",__ret7,__r6));
+			__r1.push(vdom_VDom.h("div",__ret4,__r5));
 		}
 		if(tink_state__$State_State_$Impl_$.get_value(this.__coco_log) != null) {
 			var this1 = { f : function() {
 				return tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_log);
 			}};
-			var __ret6 = { log : tink_state__$Observable_Observable_$Impl_$.auto(this1)};
-			__r1.push(coconut_ui_tools_ViewCache.mk("Log",null,Log.__init,__ret6));
+			var __ret8 = { log : tink_state__$Observable_Observable_$Impl_$.auto(this1)};
+			__r1.push(coconut_ui_tools_ViewCache.mk("Log",null,Log.__init,__ret8));
 		}
 		if(tink_state__$State_State_$Impl_$.get_value(this.__coco_results) != null) {
 			var this2 = { f : function() {
 				return tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_results);
 			}};
-			var __ret7 = { results : tink_state__$Observable_Observable_$Impl_$.auto(this2)};
-			__r1.push(coconut_ui_tools_ViewCache.mk("Charts",null,Charts.__init,__ret7));
+			var __ret9 = { results : tink_state__$Observable_Observable_$Impl_$.auto(this2)};
+			__r1.push(coconut_ui_tools_ViewCache.mk("Charts",null,Charts.__init,__ret9));
 		} else {
-			__r1.push("Loading");
+			var __ret10 = { className : vdom__$Attr_ClassName_$Impl_$.ofString("ui basic segment")};
+			var __r9 = [];
+			__r9.push("Loading");
+			__r1.push(vdom_VDom.h("div",__ret10,__r9));
 		}
-		var __ret8 = { };
-		__r.push(vdom_VDom.h("div",__ret8,__r1));
+		var __ret11 = { };
+		__r.push(vdom_VDom.h("div",__ret11,__r1));
 		return __r[0];
 	}
 	,afterInit: function(e) {
@@ -677,20 +741,23 @@ Site.prototype = $extend(coconut_ui_View.prototype,{
 					var param1 = build.commit.sha;
 					_gthis.__coco_sha.set(param1);
 					var job = build.jobs.pop();
-					return _gthis.remote.jobs().ofId(job.id).log();
+					var this1 = _gthis.remote.jobs();
+					var param2 = job.id;
+					_gthis.__coco_jobId.set(param2);
+					return this1.ofId(param2).log();
 				}
 			}
-			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(null,"No builds",{ fileName : "src/Site.hx", lineNumber : 67, className : "Site", methodName : "afterInit"}))));
+			return new tink_core__$Future_SyncFuture(new tink_core__$Lazy_LazyConst(tink_core_Outcome.Failure(new tink_core_TypedError(null,"No builds",{ fileName : "src/Site.hx", lineNumber : 112, className : "Site", methodName : "afterInit"}))));
 		}).handle(function(o) {
 			switch(o._hx_index) {
 			case 0:
 				var res1 = o.data;
-				var param2 = LogParser.parse(res1.content);
-				_gthis.__coco_results.set(param2);
+				var param3 = LogParser.parse(res1.content);
+				_gthis.__coco_results.set(param3);
 				break;
 			case 1:
 				var e1 = o.failure;
-				console.log("src/Site.hx:74:",e1);
+				console.log("src/Site.hx:119:",e1);
 				break;
 			}
 		});
@@ -726,6 +793,13 @@ Site.prototype = $extend(coconut_ui_View.prototype,{
 	}
 	,set_sha: function(param) {
 		this.__coco_sha.set(param);
+		return param;
+	}
+	,get_jobId: function() {
+		return tink_state__$State_State_$Impl_$.get_value(this.__coco_jobId);
+	}
+	,set_jobId: function(param) {
+		this.__coco_jobId.set(param);
 		return param;
 	}
 	,__class__: Site
@@ -961,7 +1035,7 @@ Charts.prototype = $extend(coconut_ui_View.prototype,{
 			while(title.hasNext()) {
 				var title1 = title.next();
 				var title2 = [title1];
-				configs.push({ type : "bar", data : { labels : targets, datasets : [{ data : targets.map((function(title3,operations2) {
+				var data = targets.map((function(title3,operations2) {
 					return function(target3) {
 						var _g4 = Lambda.find(__map_reserved[title3[0]] != null ? operations2[0].getReserved(title3[0]) : operations2[0].h[title3[0]],(function() {
 							return function(op1) {
@@ -975,7 +1049,20 @@ Charts.prototype = $extend(coconut_ui_View.prototype,{
 							return v5.value;
 						}
 					};
-				})(title2,operations1)), backgroundColor : colors}]}, options : { title : { display : true, text : title2[0]}, legend : { display : false}}});
+				})(title2,operations1));
+				var copy = data.filter((function() {
+					return function(v6) {
+						return v6 != null;
+					};
+				})());
+				copy.sort(Reflect.compare);
+				var tmp = copy[copy.length - 2] * 1.5;
+				var tmp1 = (function() {
+					return function(value1,inidex,values) {
+						return Format.number(value1);
+					};
+				})();
+				configs.push({ type : "bar", data : { labels : targets, datasets : [{ data : data, backgroundColor : colors}]}, options : { scales : { yAxes : [{ ticks : { max : tmp, callback : tmp1}}]}, title : { display : true, text : title2[0]}, legend : { display : false}}});
 			}
 		}
 		return ret1;
