@@ -40,8 +40,10 @@ class ArrayBenchmark {
 	@:variant(this)
 	public function getFirst<T>(v:T):Assertions {
 		var array = [for(_ in 0...10000000) v];
-		var temp;
-		return benchmark(#if cpp 1000000000 #else 1000000 #end, temp = array[0]);
+		var temp = array[0];
+		var result = benchmark(#if cpp 1000000000 #else 1000000 #end, temp = array[0]);
+		ensure(temp);
+		return result;
 	}
 	
 	@:generic
@@ -52,8 +54,10 @@ class ArrayBenchmark {
 	@:variant(this)
 	public function getLast<T>(v:T):Assertions {
 		var array = [for(_ in 0...10000000) v];
-		var temp;
-		return benchmark(#if cpp 1000000000 #else 1000000 #end, temp = array[10000000 - 1]);
+		var temp = array[0];
+		var result = benchmark(#if cpp 1000000000 #else 1000000 #end, temp = array[10000000 - 1]);
+		ensure(temp);
+		return result;
 	}
 	
 	@:generic
@@ -64,7 +68,10 @@ class ArrayBenchmark {
 	@:variant(this)
 	public function copy<T>(v:T):Assertions {
 		var array = [for(_ in 0...1000000) v];
-		return benchmark(#if php 10000 #elseif lua 1 #else 100 #end, array.copy());
+		var cloned = array;
+		var result =  benchmark(#if php 10000 #elseif lua 1 #else 100 #end, cloned = array.copy());
+		ensure(cloned);
+		return result;
 	}
 	
 	@:generic
@@ -116,5 +123,5 @@ class ArrayBenchmark {
 	}
 	
 	@:keep
-	function dummy<T>(v:T) {}
+	function ensure<T>(v:T) {}
 }
