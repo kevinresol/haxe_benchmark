@@ -765,9 +765,11 @@ Site.prototype = $extend(coconut_ui_View.prototype,{
 									break;
 								}
 							});
+						} else {
+							next();
 						}
 					} else {
-						var next1 = tink_core_Outcome.Failure(new tink_core_TypedError(null,"No valid builds",{ fileName : "src/Site.hx", lineNumber : 122, className : "Site", methodName : "afterInit"}));
+						var next1 = tink_core_Outcome.Failure(new tink_core_TypedError(null,"No valid builds",{ fileName : "src/Site.hx", lineNumber : 124, className : "Site", methodName : "afterInit"}));
 						cb(next1);
 					}
 				};
@@ -781,7 +783,7 @@ Site.prototype = $extend(coconut_ui_View.prototype,{
 				break;
 			case 1:
 				var e2 = o1.failure;
-				console.log("src/Site.hx:130:",e2);
+				console.log("src/Site.hx:132:",e2);
 				break;
 			}
 		});

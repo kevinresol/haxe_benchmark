@@ -117,6 +117,8 @@ class Site extends coconut.ui.View {
 										case Success(parsed): cb(Success(parsed));
 										case Failure(e): trace(e); next();
 									});
+							} else {
+								next();
 							}
 						} else {
 							cb(Failure(new Error('No valid builds')));
