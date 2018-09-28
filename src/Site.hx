@@ -81,7 +81,7 @@ class Site extends coconut.ui.View {
 			<if ${sha != null && jobId != null}>
 				<div style="margin-bottom:1em">
 					<strong>
-						Revision: ${message} (<a href="https://github.com/kevinresol/haxe_benchmark/commit/${sha}">${sha.substr(0, 6)}</a>) - <a href="https://travis-ci.org/kevinresol/haxe_benchmark/jobs/$jobId">Raw Build Log</a>
+						Revision: ${message} (<a href="https://github.com/kevinresol/haxe_benchmark/commit/${sha}">${sha.substr(0, 8)}</a>) - <a href="https://travis-ci.org/kevinresol/haxe_benchmark/jobs/$jobId">Raw Build Log</a>
 					</strong>
 				</div>
 			</if>

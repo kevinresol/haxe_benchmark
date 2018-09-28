@@ -693,7 +693,7 @@ Site.prototype = $extend(coconut_ui_View.prototype,{
 			__r6.push(" (");
 			var __ret5 = { href : "https://github.com/kevinresol/haxe_benchmark/commit/" + tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_sha)};
 			var __r7 = [];
-			__r7.push(HxOverrides.substr(tink_state__$State_State_$Impl_$.get_value(this.__coco_sha),0,6));
+			__r7.push(HxOverrides.substr(tink_state__$State_State_$Impl_$.get_value(this.__coco_sha),0,8));
 			__r6.push(vdom_VDom.h("a",__ret5,__r7));
 			__r6.push(") - ");
 			var __ret6 = { href : "https://travis-ci.org/kevinresol/haxe_benchmark/jobs/" + tink_state__$State_State_$Impl_$.get_value(_gthis.__coco_jobId)};
