@@ -17,6 +17,7 @@ class Main {
 		Logger.println(START);
 		Runner.run(TestBatch.make([
 			new ArrayBenchmark(),
+			new StringBenchmark(),
 		])).handle(function(result) {
 			Logger.println(END);
 			Runner.exit(result);
