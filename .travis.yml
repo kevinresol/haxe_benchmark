@@ -1,5 +1,5 @@
 sudo: required
-dist: trusty
+dist: xenial
 
 language: node_js
 node_js: 8
@@ -23,7 +23,7 @@ script:
   - lix run travix python
   - lix run travix node
   # - lix run travix flash # timeout after 15s
-  - lix run travix java
+  # - lix run travix java
   - lix run travix cs
   - lix run travix cpp
   - lix run travix php
